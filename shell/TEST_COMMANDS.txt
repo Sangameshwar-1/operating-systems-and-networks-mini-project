@@ -1,0 +1,250 @@
+# COMPREHENSIVE SHELL TEST COMMANDS
+# Copy and paste these into your shell to test all functionality
+
+# ============================================================================
+# PART A: Shell Prompt and Input
+# ============================================================================
+
+# A.1: Shell Prompt Test
+# Just start shell - should see: <username@hostname:~>
+
+# A.2: User Input Test
+Hi there guys!
+This shell is cool!
+
+# A.3: Input Parsing - VALID Commands
+cat meow.txt | meow; meow > meow.txt &
+echo hello
+echo hello > test.txt
+cat < input.txt
+cat file1.txt | grep test | wc -l
+sleep 5 &
+echo a ; echo b ; echo c
+
+# A.3: Input Parsing - INVALID Commands (should print "Invalid Syntax!")
+cat meow.txt | ; meow
+cat < < file.txt
+echo |
+| cat
+echo > > file.txt
+;
+&
+cat |
+
+# ============================================================================
+# PART B: Shell Intrinsics
+# ============================================================================
+
+# B.1: hop command tests
+hop
+hop ~
+hop ..
+hop .
+hop -
+hop ~ .. -
+hop /tmp
+hop /nonexistent
+hop subfolder
+
+# B.2: reveal command tests
+reveal
+reveal ~
+reveal ..
+reveal -a
+reveal -l
+reveal -al
+reveal -la
+reveal -alalala -lll
+reveal ~ -la
+reveal /tmp
+reveal /nonexistent
+reveal arg1 arg2
+
+# B.3: log command tests
+echo test1
+echo test2
+echo test3
+log
+log purge
+log
+echo test4
+echo test5
+log
+log execute 1
+log execute 2
+log execute 100
+log log
+log invalid args
+
+# ============================================================================
+# PART C: I/O Redirection and Pipes
+# ============================================================================
+
+# C.1: Basic command execution
+echo hello world
+ls
+pwd
+date
+whoami
+
+# C.2: Input redirection
+echo "test content" > input.txt
+cat < input.txt
+wc -l < input.txt
+sort < input.txt
+
+# Test non-existent file
+cat < nonexistent.txt
+
+# C.3: Output redirection
+echo "first line" > output.txt
+cat output.txt
+echo "second line" > output.txt
+cat output.txt
+echo "appended line" >> output.txt
+cat output.txt
+
+# C.4: Pipes
+echo hello | cat
+ls | wc -l
+cat input.txt | grep test | wc -l
+ps aux | grep bash | wc -l
+echo "test" | cat | cat | cat
+
+# Combined redirection and pipes
+cat < input.txt | grep test > output.txt
+echo "data" | cat > file.txt
+cat file.txt | wc -l > count.txt
+
+# ============================================================================
+# PART D: Sequential and Background Execution
+# ============================================================================
+
+# D.1: Sequential execution
+echo first ; echo second ; echo third
+ls ; pwd ; date
+echo a ; sleep 1 ; echo b
+
+# D.2: Background execution
+sleep 3 &
+sleep 5 &
+echo "background test" &
+
+# Wait a moment and check background jobs completed
+# Should see: "sleep with pid XXXX exited normally"
+
+# D.2: Combined sequential and background
+echo first ; sleep 2 & ; echo third
+sleep 1 & ; sleep 2 & ; echo done
+
+# ============================================================================
+# PART E: Advanced Features
+# ============================================================================
+
+# E.1: activities command
+sleep 100 &
+sleep 200 &
+cat &
+activities
+
+# E.2: ping command
+sleep 100 &
+# Note the PID from above
+ping 12345 9
+ping 12345 15
+ping 99999 1
+ping invalid signal
+
+# E.3: Signal handling (Ctrl-C, Ctrl-Z, Ctrl-D)
+# Start a long-running command, then press Ctrl-Z
+sleep 30
+# Press Ctrl-Z while it's running
+activities
+
+# Start another command, press Ctrl-C
+sleep 30
+# Press Ctrl-C while it's running
+
+# Test Ctrl-D to exit shell
+# Press Ctrl-D
+
+# E.4: fg and bg commands
+sleep 30
+# Press Ctrl-Z
+activities
+fg
+# Press Ctrl-Z again
+bg
+activities
+fg 1
+bg 1
+
+# Test with job numbers
+sleep 40
+# Press Ctrl-Z
+sleep 50
+# Press Ctrl-Z
+activities
+fg 2
+bg 1
+
+# ============================================================================
+# COMPREHENSIVE INTEGRATION TESTS
+# ============================================================================
+
+# Complex piped commands with redirection
+echo "line1" > test.txt
+echo "line2" >> test.txt
+echo "line3" >> test.txt
+cat test.txt | grep line | wc -l > result.txt
+cat result.txt
+
+# Background with pipes
+sleep 5 | cat &
+
+# Sequential with everything
+echo start ; cat < test.txt | grep line > out.txt ; echo done
+
+# Multiple background jobs
+sleep 5 & ; sleep 3 & ; sleep 7 &
+activities
+
+# ============================================================================
+# EDGE CASES AND ERROR HANDLING
+# ============================================================================
+
+# Empty commands
+<just press enter>
+
+# Whitespace handling
+   echo    hello   world   
+echo	tabs	work
+
+# Special characters in paths
+hop ~/Documents
+hop "../test folder with spaces"
+
+# reveal with hidden files
+reveal -a ~
+
+# log persistence (test across sessions)
+echo session1
+exit
+# Start shell again
+log
+
+# Invalid job numbers
+fg 999
+bg 999
+
+# No jobs
+activities
+
+# Signals to non-existent processes
+ping 99999 9
+
+# ============================================================================
+# CLEANUP
+# ============================================================================
+rm -f input.txt output.txt test.txt file.txt count.txt result.txt out.txt
+
